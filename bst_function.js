@@ -89,18 +89,49 @@ function find(bst, n) {
     }
 }
 
-// inOrderTraverse ： bst  -> array
-function inOrderTraverse(bst) {
+
+function inOrderTraverse(bst,callback,result) {
     if (isEmptyBst(bst)) {
-        return [];
+        return result;
     }
     else {
-        return (inOrderTraverse(left(bst))).concat(
-            [data(bst)],
-            inOrderTraverse(right(bst))
-        );
+        if (isEmptyBst(left(bst)) && isEmptyBst(right(bst))) {
+            callback(result,data(bst));
+            return result;
+        }
+        else if (isEmptyBst(left(bst))) {
+            callback(result,data(bst));
+            inOrderTraverse(right(bst),callback,result);
+            return result;
+        }
+        else if (isEmptyBst(right(bst))){
+            inOrderTraverse(left(bst),callback,result);
+            callback(result,data(bst));
+            return result;
+        }
+        else {
+            inOrderTraverse(left(bst),callback,result);
+            callback(result,data(bst));
+            inOrderTraverse(right(bst),callback,result);
+            return result;
+        }
     }
 }
+function collectBst(bst,callback,order) {
+    var result = [];
+    order(bst,callback,result);
+    return result;
+}
+function collect(arr,n) {
+    arr.push(n);
+}
+
+// test
+var b = createBst([23, 45, 16, 37, 3, 99, 22]);
+console.log(
+    collectBst(b,collect,inOrderTraverse)
+);
+
 // preOrderTraverse ： bst  -> array
 function preOrderTraverse(bst) {
     if (isEmptyBst(bst)) {
@@ -218,25 +249,25 @@ function delData(bst, n) {
 }
 
 
-//some test
-
-var b = createBst([23, 45, 16, 37, 3, 99, 22]);
-
-console.log(inOrderTraverse(b));
-console.log(inOrderTraverse(insert(b, 15)));
-
-console.log(find(b, 37) === true);
-console.log(find(b, 39) === false);
-
-console.log(findMin(b) === 3);
-console.log(findMax(b) === 99);
-
-console.log(inOrderTraverse(
-    delData(b, 100)
-));
-console.log(inOrderTraverse(
-    delData(b, 37)
-));
-console.log(inOrderTraverse(
-    delData(b, 45)
-));
+// //some test
+//
+// var b = createBst([23, 45, 16, 37, 3, 99, 22]);
+//
+// console.log(inOrderTraverse(b));
+// console.log(inOrderTraverse(insert(b, 15)));
+//
+// console.log(find(b, 37) === true);
+// console.log(find(b, 39) === false);
+//
+// console.log(findMin(b) === 3);
+// console.log(findMax(b) === 99);
+//
+// console.log(inOrderTraverse(
+//     delData(b, 100)
+// ));
+// console.log(inOrderTraverse(
+//     delData(b, 37)
+// ));
+// console.log(inOrderTraverse(
+//     delData(b, 45)
+// ));
